@@ -2,7 +2,30 @@
 
 In this cap stone project, i deployed a dynamic car rental web application called Rentzone in AWS using CI/CD pipelines and GitHub Actions.
 
-#### This project covers all the crutial skills and experiences required by a Cloud/DevOps Engineer.
+
+## Project reference architecture
+
+![GitHub Action CI_CD project](https://github.com/georgeonalo/rentzone-github-actions-terraform-ecs-project/assets/115881685/08ca2709-f24d-4ec4-b69a-f659eaceb53c)
+
+
+
+## Jobs built to complete this project.
+
+- Configure AWS credentials
+- Build AWS infrastructure with terraform
+- Create ECR repository
+- Start self-hosted EC2 runner
+- Build and push Docker image into ECR
+- Create environment file and export to s3
+- Migrate data into RDS database with Flyway
+- Stop self-hosted EC2 runner
+- Create new task definition revision
+- Restart ECS Fargate service
+
+
+
+  
+#### This project covers all the crucial skills and experiences required by a Cloud/DevOps Engineer.
 
 #### In this project, i demonsrated my proficiency in:
 
