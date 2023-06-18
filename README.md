@@ -1,4 +1,4 @@
-# Rentzone github actions terraform ecs project
+# Rentzone GitHub Actions Terraform ECS Project
 
 In this cap stone project, i deployed a dynamic car rental web application called Rentzone in AWS using CI/CD pipelines and GitHub Actions.
 
