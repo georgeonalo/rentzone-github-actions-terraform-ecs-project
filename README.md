@@ -25,9 +25,9 @@ In this cap stone project, i deployed a dynamic car rental web application calle
 
 
   
-#### This project covers all the crucial skills and experiences required by a Cloud/DevOps Engineer.
+### This project covers all the crucial skills and experiences required by a Cloud/DevOps Engineer.
 
-#### In this project, i demonsrated my proficiency in:
+### In this project, i demonsrated my proficiency in:
 
 1. Deploying dynamic web applications in AWS using CI/CD pipelines and GitHub Actions
 2. Utilizing core AWS services such as;
