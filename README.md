@@ -16,7 +16,7 @@ In this project, i demonsrated my proficiency in:
    - ECS Fargate
    - ECR
    - Route 53
-   - Auto Scalimg Groups and more.
+   - Auto Scaling Groups and more.
 
 3. Containerizing applications with Docker and pushing the image to registries like Amazon ECR.
    
@@ -24,7 +24,7 @@ In this project, i demonsrated my proficiency in:
  
 5. Migrating data for dynamic applications into RDS with tools like Flyway.
  
-6. And finally, this project showcases my ability to secure and manage secrets with credential management tools like:
+6. And finally, this project showcases my ability to secure and manage secrets with credential management tools like;
    -AWS secrete manager and
    -GitHub Actions repository secrets.
 
@@ -32,7 +32,7 @@ In this project, i demonsrated my proficiency in:
 
 In summary, this project highlights my expertise with cloud service providers like: AWS and
 
-My familiarity with DevOps tools and processes such as:
+My familiarity with DevOps tools and processes such as;
 -CI/CD pipelines
 -GitHub Actions
 -Linux
