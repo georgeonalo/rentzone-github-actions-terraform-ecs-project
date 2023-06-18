@@ -72,7 +72,7 @@ In this cap stone project, i deployed a dynamic car rental web application calle
 
   
 
-### Below are screenshots of some of the infrastructured deployed by my pipeline
+## Below are screenshots of some of the infrastructure deployed by my pipeline
 
 
 
