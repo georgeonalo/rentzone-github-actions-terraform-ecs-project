@@ -25,23 +25,23 @@ In this project, i demonsrated my proficiency in:
 5. Migrating data for dynamic applications into RDS with tools like Flyway.
  
 6. And finally, this project showcases my ability to secure and manage secrets with credential management tools like;
-   -AWS secrete manager and
-   -GitHub Actions repository secrets.
+   - AWS secrete manager and
+   - GitHub Actions repository secrets.
 
 
 
 In summary, this project highlights my expertise with cloud service providers like: AWS and my familiarity with DevOps tools and processes such as;
--CI/CD pipelines
--GitHub Actions
--Linux
--Terraform
--Docker
--Git
--GitHub
--Bash Scripting
--AWS CLI
--Flyway
--and Visual Studio Code
+- CI/CD pipelines
+- GitHub Actions
+- Linux
+- Terraform
+- Docker
+- Git
+- GitHub
+- Bash Scripting
+- AWS CLI
+- Flyway
+- and Visual Studio Code
 
   
 
