@@ -30,9 +30,7 @@ In this project, i demonsrated my proficiency in:
 
 
 
-In summary, this project highlights my expertise with cloud service providers like: AWS and
-
-My familiarity with DevOps tools and processes such as;
+In summary, this project highlights my expertise with cloud service providers like: AWS and my familiarity with DevOps tools and processes such as;
 -CI/CD pipelines
 -GitHub Actions
 -Linux
