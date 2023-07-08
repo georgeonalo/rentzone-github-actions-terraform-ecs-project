@@ -19,7 +19,7 @@ A Build is triggered in my pipeline when a git commit is pushed into my github r
 53, Request and ssl certificate to encrypt data in transit, ECS cluster, ECS task defination and ECS service in auto scaling 
 groups.
   
-**(3)** **Start self-hosted EC2 runner;** After building the infrastructure in AWS, the next job in my pipeline  starts a self-hosted runner and **Create an Amazon ECR
+**(3)** **Start self-hosted EC2 runner;** After building the infrastructure in AWS, the next job in my pipeline  starts a self-hosted runner and **Create Amazon ECR
 repository** to store the docker image for my application
  
 **(4)** **Build and push Docker image into ECR;** The fourth job setup Docker on the self-hosted runner and build the image for my application and push the image to the Amazon ECR repository
