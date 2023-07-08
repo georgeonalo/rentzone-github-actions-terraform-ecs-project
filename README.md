@@ -9,25 +9,30 @@ In this cap stone project, i deployed a dynamic car rental web application calle
 
 
 
-## Summary Jobs built in my pipeline to complete this project.
+## Summary of Jobs built in my pipeline to complete this project.
 
 A Build is triggered in my pipeline when a git commit is pushed into my github repository, and below are the different jobs that is build in the pipeline.
 
--**1** **Configure AWS credentials;** The first job configure AWS credentials for GitHub Actions to access and create resources in my AWS account.
+**1** **Configure AWS credentials;** The first job configure AWS credentials for GitHub Actions to access and create resources in my AWS account.
 
--**2** **Build AWS infrastructure with terraform;** The second job deploys infrastructure in AWS using Terraform and creates a VPC with public and private subnets, internet gateway, security groups, nat gateways, application load balancer, Rds instance, IAM role, S3 bucket, Record set in Route 
- 53, Request and ssl certificate to encrypt data in transit, ECS cluster, ECS task defination and ECS service in auto scaling 
-  groups.
+**2** **Build AWS infrastructure with terraform;** The second job deploys infrastructure in AWS using Terraform and creates a VPC with public and private subnets, internet gateway, security groups, nat gateways, application load balancer, Rds instance, IAM role, S3 bucket, Record set in Route 
+53, Request and ssl certificate to encrypt data in transit, ECS cluster, ECS task defination and ECS service in auto scaling 
+groups.
   
--**3 Start self-hosted EC2 runner;* After building the infrastructure in AWS, the next job in my pipeline will start a self-hosted runner and create an Amazon ECR
-    repository to store the docker image for my application
-- 
-- Build and push Docker image into ECR
-- Create environment file and export to s3
-- Migrate data into RDS database with Flyway
-- Stop self-hosted EC2 runner
-- Create new task definition revision
-- Restart ECS Fargate service
+**3** **Start self-hosted EC2 runner;** After building the infrastructure in AWS, the next job in my pipeline will start a self-hosted runner and **create an Amazon ECR
+repository** to store the docker image for my application
+ 
+**4** **Build and push Docker image into ECR;** The fourth job will setup Docker on the sel-hosted runner and build the image for my application and push the image to the Amazon ECR repository
+  
+**5** **Create environment file and export to s3;** The next job will export environment variables for the fargate containers into a file and copy the file into the s3 bucket
+  
+**6** **Migrate data into RDS database with Flyway;** Parallel to the Job above, another job will use flyway to migrate the sql script for the application into Rds database
+
+**7** **Stop self-hosted EC2 runner;** The next job terminates the self-hosted runner.
+  
+**8** **Create new task definition revision;** The eight job creates a new ECS task defination revison
+   
+**9** **Restart ECS Fargate service;** The last job in the pipeline uses the new revision of the ECS task defination to update the ECS service making the application available to end users
 
 
 
