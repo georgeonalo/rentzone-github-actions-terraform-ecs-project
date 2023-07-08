@@ -11,7 +11,7 @@ In this cap stone project, i deployed a dynamic car rental web application calle
 
 ## Summary of Jobs built in my pipeline to complete this project.
 
-A Build is triggered in my pipeline when a git commit is pushed into my github repository, and below are the different jobs that is build in the pipeline.
+A Build is triggered in my pipeline when a git commit is pushed into my github repository, and below are the different jobs that is built in the pipeline.
 
 **(1)** **Configure AWS credentials;** The first job configure AWS credentials for GitHub Actions to access and create resources in my AWS account.
 
