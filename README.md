@@ -24,9 +24,9 @@ repository** to store the docker image for my application
  
 **(4)** **Build and push Docker image into ECR;** The fourth job setup Docker on the self-hosted runner and build the image for my application and push the image to the Amazon ECR repository
   
-**(5)** **Create environment file and export to s3;** The next job will export environment variables for the fargate containers into a file and copy the file into the s3 bucket
+**(5)** **Create environment file and export to s3;** The next job export environment variables for the fargate containers into a file and copy the file into the s3 bucket
   
-**(6)** **Migrate data into RDS database with Flyway;** Parallel to the Job above, another job will use flyway to migrate the sql script for the application into Rds database
+**(6)** **Migrate data into RDS database with Flyway;** Parallel to the Job above, another job uses flyway to migrate the sql script for the application into Rds database
 
 **(7)** **Stop self-hosted EC2 runner;** The next job terminates the self-hosted runner.
   
