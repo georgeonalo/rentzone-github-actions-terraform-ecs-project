@@ -9,12 +9,19 @@ In this cap stone project, i deployed a dynamic car rental web application calle
 
 
 
-## Jobs built in my pipeline to complete this project.
+## Summary Jobs built in my pipeline to complete this project.
 
-- Configure AWS credentials
-- Build AWS infrastructure with terraform
-- Create ECR repository
-- Start self-hosted EC2 runner
+A Build is triggered in my pipeline when a git commit is pushed into my github repository, and below are the different jobs that is build in the pipeline.
+
+-**1** **Configure AWS credentials;** The first job configure AWS credentials for GitHub Actions to access and create resources in my AWS account.
+
+-**2** **Build AWS infrastructure with terraform;** The second job deploys infrastructure in AWS using Terraform and creates a VPC with public and private subnets, internet gateway, security groups, nat gateways, application load balancer, Rds instance, IAM role, S3 bucket, Record set in Route 
+ 53, Request and ssl certificate to encrypt data in transit, ECS cluster, ECS task defination and ECS service in auto scaling 
+  groups.
+  
+-**3 Start self-hosted EC2 runner;* After building the infrastructure in AWS, the next job in my pipeline will start a self-hosted runner and create an Amazon ECR
+    repository to store the docker image for my application
+- 
 - Build and push Docker image into ECR
 - Create environment file and export to s3
 - Migrate data into RDS database with Flyway
