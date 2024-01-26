@@ -32,17 +32,14 @@ RUN amazon-linux-extras enable php7.4 && \
     php-intl \
     php-zip
 
-# Download the MySQL repository package
-RUN wget https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm
+# Install MySQL with Homebrew
+RUN brew install mysql
 
-# Import the GPG key for the MySQL repository
-RUN rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+# Start MySQL service
+RUN brew services start mysql
 
-# Install the MySQL repository package
-RUN yum localinstall mysql80-community-release-el7-3.noarch.rpm -y
-
-# Install the MySQL community server package
-RUN yum install mysql-community-server -y
+# (Optional) Secure MySQL installation
+RUN mysql_secure_installation
 
 # Change directory to the html directory
 WORKDIR /var/www/html
