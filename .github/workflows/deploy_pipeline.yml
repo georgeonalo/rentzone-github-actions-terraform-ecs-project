@@ -60,7 +60,7 @@ jobs:
 
       - name: Get Terraform output domain name
         if: env.TERRAFORM_ACTION == 'apply'
-        working-directory: 
+        working-directory: ./iac
         run: |
           DOMAIN_NAME_VALUE=$(terraform output -raw domain_name | grep -Eo "^[^:]+" | tail -n 1)
           echo "DOMAIN_NAME=$DOMAIN_NAME_VALUE" >> $GITHUB_ENV
