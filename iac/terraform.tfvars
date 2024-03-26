@@ -22,8 +22,8 @@ database_instance_class      = "db.t2.micro"
 publicly_accessible          = false
 
 # acm variables
-domain_name       = "georgenal.xyz"
-alternative_names = "*.georgenal.xyz"
+domain_name       = "georgenal.online"
+alternative_names = "*.georgenal.online"
 
 # s3 variables
 env_file_bucket_name = "georgenal-rentzone-app-env-file-bucket"
