@@ -72,6 +72,11 @@ variable "database_instance_class" {
   type        = string
 }
 
+variable "final_snapshot_identifier" {
+  description = "final snapshot identifier name"
+  type        = string
+}
+
 variable "publicly_accessible" {
   description = "controls if instance is publicly accessible"
   type        = bool

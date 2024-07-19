@@ -20,6 +20,7 @@ multi_az_deployment          = false
 database_instance_identifier = "app-db"
 database_instance_class      = "db.t3.micro"
 publicly_accessible          = false
+final_snapshot_identifier    = "app-db-final-snapshot"
 
 # acm variables
 domain_name       = "georgenal.online"
