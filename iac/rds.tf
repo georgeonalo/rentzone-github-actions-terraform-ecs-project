@@ -24,5 +24,7 @@ resource "aws_db_instance" "database_instance" {
   vpc_security_group_ids = [aws_security_group.database_security_group.id, aws_security_group.runner_security_group.id]
   availability_zone      = data.aws_availability_zones.available_zones.names[0]
   skip_final_snapshot    = false
+  final_snapshot_identifier = "app-db-final-snapshot"
+
   publicly_accessible    = var.publicly_accessible
 }
