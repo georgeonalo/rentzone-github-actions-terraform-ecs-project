@@ -35,7 +35,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
   container_definitions = jsonencode([
     {
       name      = "${var.project_name}-${var.environment}-container"
-      image     = "${local.secrets.ecr_registry}/${var.image_name}:${var.image_tag}"
+      image     = "${local.ecr_registry_clean}/${var.image_name}:${var.image_tag}"
       essential = true
 
       portMappings = [
