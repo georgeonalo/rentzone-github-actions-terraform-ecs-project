@@ -1,56 +1,9 @@
-# Use the latest version of the Amazon Linux base image
-FROM amazonlinux:2
+# ================================
+# BUILD STAGE
+# ================================
+FROM amazonlinux:2 AS builder
 
-# Update all installed packages to thier latest versions
-RUN yum update -y 
-
-# Install the unzip package, which we will use it to extract the web files from the zip folder
-RUN yum install unzip -y
-
-# Install wget package, which we will use it to download files from the internet 
-RUN yum install -y wget
-
-# Install Apache
-RUN yum install -y httpd
-
-# Install PHP and various extensions
-RUN amazon-linux-extras enable php7.4 && \
-  yum clean metadata && \
-  yum install -y \
-    php \
-    php-common \
-    php-pear \
-    php-cgi \
-    php-curl \
-    php-mbstring \
-    php-gd \
-    php-mysqlnd \
-    php-gettext \
-    php-json \
-    php-xml \
-    php-fpm \
-    php-intl \
-    php-zip
-
-# Download the MySQL repository package
-RUN wget https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm
-
-# Import the GPG key for the MySQL repository
-RUN rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023
-
-# Install the MySQL repository package
-RUN yum localinstall mysql80-community-release-el7-3.noarch.rpm -y
-
-# Install the MySQL community server package
-RUN yum install mysql-community-server -y
-
-# Change directory to the html directory
-WORKDIR /var/www/html
-
-# Install Git
-RUN yum install -y git
-
-# Set the build argument directive
+# Set build arguments
 ARG PERSONAL_ACCESS_TOKEN
 ARG GITHUB_USERNAME
 ARG REPOSITORY_NAME
@@ -62,65 +15,92 @@ ARG RDS_DB_NAME
 ARG RDS_DB_USERNAME
 ARG RDS_DB_PASSWORD
 
-# Use the build argument to set environment variables 
-ENV PERSONAL_ACCESS_TOKEN=$PERSONAL_ACCESS_TOKEN 
-ENV GITHUB_USERNAME=$GITHUB_USERNAME
-ENV REPOSITORY_NAME=$REPOSITORY_NAME
-ENV WEB_FILE_ZIP=$WEB_FILE_ZIP
-ENV WEB_FILE_UNZIP=$WEB_FILE_UNZIP
-ENV DOMAIN_NAME=$DOMAIN_NAME
-ENV RDS_ENDPOINT=$RDS_ENDPOINT
-ENV RDS_DB_NAME=$RDS_DB_NAME
-ENV RDS_DB_USERNAME=$RDS_DB_USERNAME
-ENV RDS_DB_PASSWORD=$RDS_DB_PASSWORD
+# Install only necessary packages for building
+RUN yum update -y && \
+    yum install -y unzip wget git && \
+    yum clean all
 
-# Clone the GitHub repository
-RUN git clone https://${PERSONAL_ACCESS_TOKEN}@github.com/${GITHUB_USERNAME}/${REPOSITORY_NAME}.git
+# Set working directory for build operations
+WORKDIR /build
 
-# Unzip the zip folder containing the web files
-RUN unzip ${REPOSITORY_NAME}/${WEB_FILE_ZIP} -d ${REPOSITORY_NAME}/
+# Clone the repository and extract files
+RUN git clone https://${PERSONAL_ACCESS_TOKEN}@github.com/${GITHUB_USERNAME}/${REPOSITORY_NAME}.git && \
+    unzip ${REPOSITORY_NAME}/${WEB_FILE_ZIP} -d ${REPOSITORY_NAME}/ && \
+    cp -av ${REPOSITORY_NAME}/${WEB_FILE_UNZIP}/. /build/webfiles/ && \
+    rm -rf ${REPOSITORY_NAME}
 
-# Copy the web files into the HTML directory
-RUN cp -av ${REPOSITORY_NAME}/${WEB_FILE_UNZIP}/. /var/www/html
+# Configure environment file
+WORKDIR /build/webfiles
+RUN sed -i '/^APP_ENV=/ s/=.*$/=production/' .env && \
+    sed -i "/^APP_URL=/ s/=.*$/=https:\/\/${DOMAIN_NAME}\//" .env && \
+    sed -i "/^DB_HOST=/ s/=.*$/=${RDS_ENDPOINT}/" .env && \
+    sed -i "/^DB_DATABASE=/ s/=.*$/=${RDS_DB_NAME}/" .env && \
+    sed -i "/^DB_USERNAME=/ s/=.*$/=${RDS_DB_USERNAME}/" .env && \
+    sed -i "/^DB_PASSWORD=/ s/=.*$/=${RDS_DB_PASSWORD}/" .env
 
-# Remove the repository we cloned
-RUN rm -rf ${REPOSITORY_NAME}
+# ================================
+# RUNTIME STAGE
+# ================================
+FROM amazonlinux:2 AS runtime
 
-# Enable the mod_rewrite setting in the httpd.conf file
-RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf
+# Install only runtime dependencies
+RUN yum update -y && \
+    amazon-linux-extras enable php7.4 && \
+    yum clean metadata && \
+    yum install -y \
+        httpd \
+        php \
+        php-common \
+        php-pear \
+        php-cgi \
+        php-curl \
+        php-mbstring \
+        php-gd \
+        php-mysqlnd \
+        php-gettext \
+        php-json \
+        php-xml \
+        php-fpm \
+        php-intl \
+        php-zip \
+        wget && \
+    yum clean all && \
+    rm -rf /var/cache/yum
 
-# Give full access to the /var/www/html directory
-RUN chmod -R 777 /var/www/html
+# Install MySQL client (smaller footprint than full server)
+RUN wget https://repo.mysql.com/mysql80-community-release-el7-3.noarch.rpm && \
+    rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2023 && \
+    yum localinstall mysql80-community-release-el7-3.noarch.rpm -y && \
+    yum install mysql-community-client -y && \
+    yum clean all && \
+    rm -rf /var/cache/yum mysql80-community-release-el7-3.noarch.rpm
 
-# Give full access to the storage directory
-RUN chmod -R 777 storage/
+# Set working directory
+WORKDIR /var/www/html
 
-# Use the sed command to search the .env file for a line that starts with APP_ENV= and replace everything after the = character
-RUN sed -i '/^APP_ENV=/ s/=.*$/=production/' .env
+# Copy web files from build stage
+COPY --from=builder /build/webfiles/ /var/www/html/
 
-# Use the sed command to search the .env file for a line that starts with APP_URL= and replace everything after the = character
-RUN sed -i "/^APP_URL=/ s/=.*$/=https:\/\/${DOMAIN_NAME}\//" .env
-
-# Use the sed command to search the .env file for a line that starts with DB_HOST= and replace everything after the = character
-RUN sed -i "/^DB_HOST=/ s/=.*$/=${RDS_ENDPOINT}/" .env
-
-# Use the sed command to search the .env file for a line that starts with DB_DATABASE= and replace everything after the = character
-RUN sed -i "/^DB_DATABASE=/ s/=.*$/=${RDS_DB_NAME}/" .env
-
-# Use the sed command to search the .env file for a line that starts with DB_USERNAME= and replace everything after the = character
-RUN  sed -i "/^DB_USERNAME=/ s/=.*$/=${RDS_DB_USERNAME}/" .env
-
-# Use the sed command to search the .env file for a line that starts with DB_PASSWORD= and replace everything after the = character
-RUN  sed -i "/^DB_PASSWORD=/ s/=.*$/=${RDS_DB_PASSWORD}/" .env
-
-# Print the .env file to review values
-RUN cat .env
-
-# Copy the file, AppServiceProvider.php from the host file system into the container at the path app/Providers/AppServiceProvider.php
+# Copy AppServiceProvider from host (this needs to be in build context)
 COPY AppServiceProvider.php app/Providers/AppServiceProvider.php
 
-# Expose the default Apache and MySQL ports
-EXPOSE 80 3306
+# Configure Apache
+RUN sed -i '/<Directory "\/var\/www\/html">/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/httpd/conf/httpd.conf
 
-# Start Apache and MySQL
+# Set proper permissions
+RUN chmod -R 755 /var/www/html && \
+    chmod -R 777 storage/ && \
+    chown -R apache:apache /var/www/html
+
+# Create a non-root user for better security
+RUN groupadd -r appuser && useradd -r -g appuser appuser
+
+# Expose only necessary port (removed MySQL port since we're using external RDS)
+EXPOSE 80
+
+# Add health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost/ || exit 1
+
+# Start Apache in foreground
 ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]
